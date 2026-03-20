@@ -4,11 +4,24 @@
       "dockerfile": "./Dockerfile",
       "context": ".",
       "args": {
+        "http_proxy": "http://10.24.88.77:10808",
+        "https_proxy": "http://10.24.88.77:10808",
+        "HTTP_PROXY": "http://10.24.88.77:10808",
+        "HTTPS_PROXY": "http://10.24.88.77:10808",
+        "NO_PROXY": "${NO_PROXY}",
         "USER_UID": "${localEnv:USER_UID}",
         "USER_GID": "${localEnv:USER_GID}"
       }
   },
+  "containerEnv": {
+    "http_proxy": "http://host.docker.internal:10808",
+    "https_proxy": "http://host.docker.internal:10808",
+    "HTTP_PROXY": "http://host.docker.internal:10808",
+    "HTTPS_PROXY": "http://host.docker.internal:10808",
+    "NO_PROXY": "${NO_PROXY}"
+  },
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "runArgs": ["--add-host=host.docker.internal:host-gateway"],
   "remoteUser": "dev",
   "postStartCommand": "conan profile detect || true",
   "customizations": {

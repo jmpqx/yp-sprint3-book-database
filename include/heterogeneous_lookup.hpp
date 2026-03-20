@@ -5,10 +5,28 @@
 
 namespace bookdb {
 
-struct TransparentStringLess {};
+struct TransparentStringLess {
+    using is_transparent = void;
 
-struct TransparentStringEqual {};
+    auto operator()(std::string_view lhs, std::string_view rhs) const {
+        return lhs < rhs;
+    }
+};
 
-struct TransparentStringHash {};
+struct TransparentStringEqual {
+    using is_transparent = void;
+
+    auto operator()(std::string_view lhs, std::string_view rhs) const {
+        return lhs == rhs;
+    }
+};
+
+struct TransparentStringHash {
+    using is_transparent = void;
+
+    auto operator()(std::string_view str) const {
+        return std::hash<std::string_view>{}(str);
+    }
+};
 
 }  // namespace bookdb
