@@ -65,8 +65,8 @@ public:
         }
     }
 
-    void EmplaceBack(const std::string_view author, const std::string &title, int year,
-                     Genre genre, double rating, int read_count) {
+    void EmplaceBack(const std::string_view author, const std::string &title, int year, Genre genre, double rating,
+                     int read_count) {
         auto [it, is_inserted] = authors_.emplace(author);
 
         try {
@@ -77,8 +77,8 @@ public:
         }
     }
 
-    const BookContainer& GetBooks() const { return books_; }
-    const AuthorContainer& GetAuthors() const { return authors_; }
+    const BookContainer &GetBooks() const { return books_; }
+    const AuthorContainer &GetAuthors() const { return authors_; }
 
 private:
     BookContainer books_;

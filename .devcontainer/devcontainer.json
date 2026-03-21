@@ -4,10 +4,10 @@
       "dockerfile": "./Dockerfile",
       "context": ".",
       "args": {
-        "http_proxy": "http://10.24.88.77:10808",
-        "https_proxy": "http://10.24.88.77:10808",
-        "HTTP_PROXY": "http://10.24.88.77:10808",
-        "HTTPS_PROXY": "http://10.24.88.77:10808",
+        "http_proxy": "http://172.24.176.1:10808",
+        "https_proxy": "http://172.24.176.1:10808",
+        "HTTP_PROXY": "http://172.24.176.1:10808",
+        "HTTPS_PROXY": "http://172.24.176.1:10808",
         "NO_PROXY": "${NO_PROXY}",
         "USER_UID": "${localEnv:USER_UID}",
         "USER_GID": "${localEnv:USER_GID}"

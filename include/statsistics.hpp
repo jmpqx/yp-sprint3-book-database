@@ -10,6 +10,7 @@
 
 #include "book_database.hpp"
 #include "comparators.hpp"
+#include "concepts.hpp"
 
 #include <print>
 
@@ -34,8 +35,7 @@ struct formatter<std::flat_map<Key, Tp, Comparator, KeyContainer, MappedContaine
 template <typename Tp, typename Allocator>
 struct formatter<std::vector<Tp, Allocator>, char> {
     template <typename FormatContext>
-    auto format(const std::vector<Tp, Allocator> &cont,
-                FormatContext &fc) const {
+    auto format(const std::vector<Tp, Allocator> &cont, FormatContext &fc) const {
         format_to(fc.out(), "{{\n");
         for (const auto &elem : cont) {
             format_to(fc.out(), "{{{}}}\n", elem);
@@ -92,28 +92,25 @@ auto buildAuthorHistogramFlat(const BookDatabase<T> &cont, Comparator comp = {})
     return histogram;
 }
 
-template <BookContainerLike T>
-auto calculateGenreRatings(const BookDatabase<T> &cont) {
-    std::flat_map<Genre, double> genre_ratings = {
-        {Genre::Fiction, 0.},   {Genre::NonFiction, 0.}, {Genre::SciFi, 0.},
-        {Genre::Biography, 0.}, {Genre::Mystery, 0.},    {Genre::Unknown, 0.},
-    };
+template <BookIterator It, BookSentinel<It> Sent>
+auto calculateGenreRatings(It begin, Sent end) {
+    std::flat_map<Genre, double> genre_ratings;
+    std::flat_map<Genre, size_t> genre_counts;
 
-    std::flat_map<Genre, size_t> genre_counts = {
-        {Genre::Fiction, 0},   {Genre::NonFiction, 0}, {Genre::SciFi, 0},
-        {Genre::Biography, 0}, {Genre::Mystery, 0},    {Genre::Unknown, 0},
-    };
+    std::for_each(begin, end, [&](const auto &book) {
+        if (!genre_ratings.contains(book.genre)) {
+            genre_ratings.try_emplace(book.genre, book.rating);
+            genre_counts.try_emplace(book.genre, 1);
+            return;
+        }
 
-    std::for_each(cont.cbegin(), cont.cend(), [&](const auto &book) {
         genre_ratings.at(book.genre) += book.rating;
         genre_counts.at(book.genre)++;
     });
 
     std::for_each(genre_ratings.begin(), genre_ratings.end(), [&](auto &&pair) {
         auto &[genre, rating] = pair;
-        if (genre_counts.at(genre) != 0) {
-            rating /= genre_counts.at(genre);
-        }
+        rating /= genre_counts.at(genre);
     });
 
     return genre_ratings;
@@ -141,7 +138,7 @@ template <BookContainerLike T, BookComparator Comparator = comp::GreaterByRating
 auto getTopNBy(BookDatabase<T> &cont, size_t number, Comparator comp = {}) {
     std::partial_sort(cont.begin(), std::next(cont.begin(), number), cont.end(), comp);
 
-    std::vector<std::reference_wrapper<const Book>> result {cont.begin(), std::next(cont.begin(), number)};
+    std::vector<std::reference_wrapper<const Book>> result{cont.begin(), std::next(cont.begin(), number)};
 
     return result;
 }

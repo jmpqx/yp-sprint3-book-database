@@ -60,12 +60,11 @@ struct Book {
     int read_count;
 
     constexpr Book(sv author, const std::string &title, int year, Genre genre, double rating, int read_count)
-        : author(author), title(title), year(year), genre(genre), rating(rating), read_count(read_count) {
-    }
+        : author(author), title(title), year(year), genre(genre), rating(rating), read_count(read_count) {}
 
     constexpr Book(sv author, const std::string &title, int year, sv genre, double rating, int read_count)
-        : author(author), title(title), year(year), genre(GenreFromString(genre)), rating(rating), read_count(read_count) {
-    }
+        : author(author), title(title), year(year), genre(GenreFromString(genre)), rating(rating),
+          read_count(read_count) {}
 
     auto operator==(const Book &other) const {
         return author == other.author && title == other.title && year == other.year && genre == other.genre &&
@@ -95,9 +94,7 @@ struct formatter<bookdb::Book, char> {
                          b.author, b.title, b.year, b.genre, b.rating, b.read_count);
     }
 
-    constexpr auto parse(format_parse_context &ctx) {
-        return ctx.begin();
-    }
+    constexpr auto parse(format_parse_context &ctx) { return ctx.begin(); }
 };
 
 }  // namespace std
