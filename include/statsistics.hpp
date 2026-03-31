@@ -126,6 +126,10 @@ auto calculateAverageRating(const BookDatabase<T> &cont) {
 
 template <BookContainerLike T>
 auto sampleRandomBooks(const BookDatabase<T> &cont, size_t number) {
+    if (number > cont.size()) {
+        throw std::runtime_error("Number greater than db size");
+    }
+
     std::vector<std::reference_wrapper<const Book>> result;
     result.reserve(number);
 

@@ -17,7 +17,10 @@ inline auto YearBetween(uint from, uint to) {
 }
 
 inline auto RatingAbove(double rating) {
-    if (rating < 0. || rating > 5.) {
+    static const double min_rating = 0.;
+    static const double max_rating = 5.; 
+
+    if (rating < min_rating || rating > max_rating) {
         throw std::invalid_argument(std::format("Invalid rating: {}. Rating should be between 0 and 5.", rating));
     }
 
